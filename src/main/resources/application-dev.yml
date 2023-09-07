@@ -1,0 +1,11 @@
+logging:
+  path: ./log/
+
+spring:
+  redis:
+    host: 127.0.0.1
+  datasource:
+    url: jdbc:mysql://localhost:3306/vidio_mangage_db?useSSL=false&useUnicode=true&serverTimezone=UTC&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&allowPublicKeyRetrieval=true&allowMultiQueries=true
+    username: root
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
