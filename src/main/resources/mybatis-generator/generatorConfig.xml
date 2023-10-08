@@ -15,8 +15,8 @@
 
         <!-- jdbc -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/vidio_mangage_db?useSSL=false&amp;useUnicode=true&amp;serverTimezone=UTC&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;allowPublicKeyRetrieval=true"
-                        userId="root" password="adou">
+                        connectionURL="jdbc:mysql://localhost:3306/video_mangage_db?useSSL=false&amp;useUnicode=true&amp;serverTimezone=UTC&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;allowPublicKeyRetrieval=true"
+                        userId="root" password="root">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -25,20 +25,20 @@
 
         <!-- domain -->
         <javaModelGenerator targetPackage="com.alvis.media.domain"
-                            targetProject="D:\tecachworkspace\code\exam\src\main\java\">
+                            targetProject="F:\gitworkspace\mediaAnalysisSystem\src\main\java\">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- mapper xml -->
         <sqlMapGenerator targetPackage="mapper"
-                         targetProject="D:\tecachworkspace\code\exam\src\main\resources">
+                         targetProject="F:\gitworkspace\mediaAnalysisSystem\src\main\resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
         <!-- repository -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.alvis.media.repository"
-                             targetProject="D:\tecachworkspace\code\exam\src\main\java\">
+                             targetProject="F:\gitworkspace\mediaAnalysisSystem\src\main\java\">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 

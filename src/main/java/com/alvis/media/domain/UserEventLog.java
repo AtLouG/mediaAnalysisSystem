@@ -23,6 +23,21 @@ public class UserEventLog implements Serializable {
         this.realName = realName;
         this.createTime = createTime;
     }
+
+    public UserEventLog() {
+    }
+
+    public UserEventLog(Integer id, Integer userId, String userName, String realName, String content, Date createTime) {
+        this.id = id;
+        this.userId = userId;
+        this.userName = userName;
+        this.realName = realName;
+        this.content = content;
+        this.createTime = createTime;
+    }
+
+
+
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 

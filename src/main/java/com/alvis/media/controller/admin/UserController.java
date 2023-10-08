@@ -12,6 +12,7 @@ import com.alvis.media.service.UserService;
 import com.alvis.media.utility.DateTimeUtil;
 import com.alvis.media.utility.PageInfoHelper;
 import com.alvis.media.viewmodel.admin.user.*;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
 
@@ -37,21 +38,26 @@ public class UserController extends BaseApiController {
 
     @RequestMapping(value = "/page/list", method = RequestMethod.POST)
     public RestResponse<PageInfo<UserResponseVM>> pageList(@RequestBody UserPageRequestVM model) {
+        PageInfo<User> userPageInfo = userService.userPage(model);
+        PageInfo<UserResponseVM> page = PageInfoHelper.copyMap(userPageInfo,d -> UserResponseVM.from(d));
 
-        return RestResponse.ok();
+        return RestResponse.ok(page);
     }
 
 
     @RequestMapping(value = "/event/page/list", method = RequestMethod.POST)
     public RestResponse<PageInfo<UserEventLogVM>> eventPageList(@RequestBody UserEventPageRequestVM model) {
+        PageInfo<UserEventLog> page = userEventLogService.page(model);
+        PageInfo<UserEventLogVM> userResponseVMPageInfo = PageInfoHelper.copyMap(page,d -> UserEventLogVM.from(d));
 
-        return RestResponse.ok();
+        return RestResponse.ok(userResponseVMPageInfo);
     }
 
     @RequestMapping(value = "/select/{id}", method = RequestMethod.POST)
     public RestResponse<UserResponseVM> select(@PathVariable Integer id) {
-
-        return RestResponse.ok();
+        User user = userService.selectById(id);
+        UserResponseVM from = UserResponseVM.from(user);
+        return RestResponse.ok(from);
     }
 
     @RequestMapping(value = "/current", method = RequestMethod.POST)
