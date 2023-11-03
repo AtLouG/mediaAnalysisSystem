@@ -60,4 +60,6 @@ public interface UserService extends BaseService<User> {
     User selectByWxOpenId(String wxOpenId);
 
     void changePicture(User user, String imagePath);
+
+    int selectUserCount(User user);
 }

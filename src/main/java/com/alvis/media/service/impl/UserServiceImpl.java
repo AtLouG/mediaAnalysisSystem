@@ -140,4 +140,14 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         changePictureUser.setImagePath(imagePath);
         userMapper.updateByPrimaryKeySelective(changePictureUser);
     }
+
+    @Override
+    public int selectUserCount(User user) {
+        // 当月的用户新增用户数量
+        // 封装查询条件
+        user.setCreateTime(DateTimeUtil.getMonthStartDay());
+
+        // 调用DAO并返回
+        return userMapper.selectUserCount(user);
+    }
 }

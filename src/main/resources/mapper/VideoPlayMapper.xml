@@ -7,12 +7,86 @@
     <result column="last_play_time" jdbcType="TIMESTAMP" property="lastPlayTime" />
     <result column="play_times" jdbcType="INTEGER" property="playTimes" />
   </resultMap>
-  <insert id="insert" parameterType="com.alvis.media.domain.VideoPlay">
-    insert into t_video_play (video_id, user_id, last_play_time, 
-      play_times)
-    values (#{videoId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{lastPlayTime,jdbcType=TIMESTAMP}, 
-      #{playTimes,jdbcType=INTEGER})
-  </insert>
+  <sql id="Base_Column_List">
+    video_id,
+         user_id,
+         last_play_time,
+         play_times
+  </sql>
+
+
+  <!-- List<KeyValue> selectCountByDate(Date startTime, Date endTime); 指定开始时间和结束时间查询视频的播放次数 -->
+  <select id="selectCountByDate"  resultType="com.alvis.media.domain.other.KeyValue">
+    select
+      last_play_time as name,
+      sum(play_times) as value
+    from
+      (
+      select
+      date_format(last_play_time,'%y-%m-%d') as last_play_time,
+      play_times from t_video_play
+      where  last_play_time  between  #{startTime}  and  #{endTime}
+      ) a
+    group by last_play_time
+  </select>
+
+  <!--  String selectBestVideo(VideoPlay videoPlay); 查询当月最佳视频 -->
+  <select id="selectBestVideo" parameterType="com.alvis.media.domain.VideoPlay" resultType="java.lang.String">
+    select
+    video_name
+    from
+    (
+    select
+    *
+    from
+    t_video_play
+    order by play_times desc
+    limit 1
+    )as best,t_video_info
+    <where>
+      best.video_id = t_video_info.video_id
+      <if test="lastPlayTime != null">
+        and last_play_time > #{lastPlayTime}
+      </if>
+    </where>
+  </select>
+
+  <!--  Integer selectVideoPlayCount(VideoPlay videoPlay); 查询当月的用户新增视频数量 -->
+  <select id="selectVideoPlayCount" parameterType="com.alvis.media.domain.VideoPlay" resultType="java.lang.Integer">
+    select
+    sum(play_times)
+    from
+    t_video_play
+    <where>
+      <if test="lastPlayTime != null">
+        and last_play_time > #{lastPlayTime}
+      </if>
+    </where>
+  </select>
+
+  <!-- List<VideoPlay> selectVideoPlayInfo(VideoPlay videoPlay);  视频播放列表查询 -->
+  <select id="selectVideoPlayInfo" parameterType="com.alvis.media.domain.VideoPlay" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from
+    t_video_play
+    <where>
+      <if test="lastPlayTime != null">
+        and last_play_time = #{lastPlayTime}
+      </if>
+      <if test="userId != null">
+        and user_Id = #{userId}
+      </if>
+      <if test="videoId != null">
+        and video_id = #{videoId}
+      </if>
+      <if test="playTimes != null">
+        and play_times = #{playTimes}
+      </if>
+    </where>
+  </select>
+
+  <!-- int insertSelective(VideoPlay record); 根据条件插入视频播放操作 -->
   <insert id="insertSelective" parameterType="com.alvis.media.domain.VideoPlay">
     insert into t_video_play
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -43,5 +117,32 @@
         #{playTimes,jdbcType=INTEGER},
       </if>
     </trim>
+  </insert>
+
+  <!--  int updateByPrimaryKeySelective(VideoPlay record);  根据条件(videoId和userId)修改视频播放信息 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.alvis.media.domain.VideoPlay">
+    update t_video_play
+    <set>
+      <if test="userId != null">
+        user_Id = #{userId},
+      </if>
+      <if test="videoId != null">
+        video_id = #{videoId},
+      </if>
+      <if test="playTimes != null">
+        play_times = #{playTimes},
+      </if>
+      <if test="lastPlayTime != null">
+        last_Play_Time =  #{lastPlayTime},
+      </if>
+    </set>
+    where video_id = #{videoId,jdbcType=INTEGER} and user_Id = #{userId}
+  </update>
+
+  <insert id="insert" parameterType="com.alvis.media.domain.VideoPlay">
+    insert into t_video_play (video_id, user_id, last_play_time,
+                              play_times)
+    values (#{videoId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{lastPlayTime,jdbcType=TIMESTAMP},
+            #{playTimes,jdbcType=INTEGER})
   </insert>
 </mapper>
